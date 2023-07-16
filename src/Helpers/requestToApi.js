@@ -46,5 +46,13 @@ export const getMovieReviews = async (id) => {
 		return toast.error(err.message)
 	}
 }
-getMovieReviews(447365)
-getMovieCredits(447365)
+export const getMoviesBySearch = async (name = '', page = 1) => {
+	try {
+		const res = await axios.get(`/search/movie?query=${name}&page=${page}`, { params: defaultParams });
+
+		return res.data;
+	} catch (err) {
+		return toast.error(err.message)
+	}
+
+}

@@ -1,3 +1,4 @@
+import { LinearProgress } from '@mui/material';
 import { getMovieReviews } from 'Helpers/requestToApi';
 import ReviewCard from 'components/ReviewCard/ReviewCard';
 import React, { useEffect, useState } from 'react'
@@ -6,12 +7,12 @@ import { useParams } from 'react-router-dom';
 const Reviews = () => {
 	const [review, setReview] = useState([]);
 	const [error, setError] = useState(null);
+	const [isLoading, setLoading] = useState(false)
 	const { id } = useParams();
-
 	useEffect(() => {
 		const fetchReview = async () => {
 			try {
-
+				setLoading(true)
 				const { results } = await getMovieReviews(id);
 				const newReview = results.map(({ id, author, author_details: { avatar_path, username }, content, created_at }) => ({
 					id,
@@ -27,12 +28,16 @@ const Reviews = () => {
 				console.log(error);
 				setError(error);
 			}
+			finally {
+				setLoading(false)
+			}
 		};
 
 		fetchReview();
 	}, [id]);
 	return (
 		<>
+			{isLoading && <LinearProgress />}
 			{review.length !== 0 ? <ul className='list-group d-flex flex-wrap flex-row justify-content-md-around '>
 				{review.map(({ id, author, username, avatar_path, content, created_at }) => (
 					<li key={id}>

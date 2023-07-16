@@ -1,12 +1,15 @@
-import React from 'react'
-import { toast } from 'react-toastify'
+import React from 'react';
+import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
-const Error = (err) => {
-	return (
-		<>
-			{toast.error(err)}
-		</>
-	)
-}
+const Error = ({ err }) => {
+	return <>
+		{toast.error(err)}
+	</>;
+};
 
-export default Error
+Error.propTypes = {
+	err: PropTypes.string.isRequired,
+};
+
+export default Error;

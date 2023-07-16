@@ -1,6 +1,8 @@
-import { getSimpleDate } from 'Helpers/getSimpleDate'
-import { getImagesFromApi } from 'Helpers/getImages';
+import PropTypes from 'prop-types';
 import React from 'react'
+
+import { getImagesFromApi } from 'Helpers/getImages';
+import { getSimpleDate } from 'Helpers/getSimpleDate'
 import defaultAvatar from 'images/default_user.png';
 
 
@@ -30,5 +32,13 @@ const ReviewCard = ({ author, avatar, username, content, created }) => {
 		</>
 	)
 }
+
+ReviewCard.propTypes = {
+	author: PropTypes.string.isRequired,
+	avatar: PropTypes.string,
+	username: PropTypes.string.isRequired,
+	content: PropTypes.string.isRequired,
+	created: PropTypes.string.isRequired,
+};
 
 export default ReviewCard

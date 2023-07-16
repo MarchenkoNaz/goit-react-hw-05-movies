@@ -1,58 +1,69 @@
+import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+
+import Error from 'components/Error/Error';
 import { LinearProgress } from '@mui/material';
 import { getMovieReviews } from 'Helpers/requestToApi';
 import ReviewCard from 'components/ReviewCard/ReviewCard';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
 
 const Reviews = () => {
-	const [review, setReview] = useState([]);
+	const [reviews, setReviews] = useState([]);
 	const [error, setError] = useState(null);
-	const [isLoading, setLoading] = useState(false)
+	const [isLoading, setLoading] = useState(false);
 	const { id } = useParams();
+
 	useEffect(() => {
-		const fetchReview = async () => {
+		const fetchReviews = async () => {
 			try {
-				setLoading(true)
+				setLoading(true);
 				const { results } = await getMovieReviews(id);
-				const newReview = results.map(({ id, author, author_details: { avatar_path, username }, content, created_at }) => ({
+				const newReviews = results.map(({ id, author, author_details: { avatar_path, username }, content, created_at }) => ({
 					id,
 					author,
 					username,
-					avatar_path,
+					avatar: avatar_path,
 					content,
-					created_at
+					created: created_at
 				}));
 
-				setReview(newReview);
+				setReviews(newReviews);
 			} catch (error) {
-				console.log(error);
 				setError(error);
-			}
-			finally {
-				setLoading(false)
+			} finally {
+				setLoading(false);
 			}
 		};
 
-		fetchReview();
+		fetchReviews();
 	}, [id]);
+
 	return (
 		<>
-			{isLoading && <LinearProgress />}
-			{review.length !== 0 ? <ul className='list-group d-flex flex-wrap flex-row justify-content-md-around '>
-				{review.map(({ id, author, username, avatar_path, content, created_at }) => (
-					<li key={id}>
-						<ReviewCard
-							author={author}
-							username={username}
-							content={content}
-							avatar={avatar_path}
-							created={created_at}
-						/>
-					</li>
-				))}
-			</ul> : <p className='display-3'>No reviews</p>}
-		</>
-	)
-}
+			{error && <Error err={error.message} />}
+			{isLoading ? <LinearProgress /> : <ul className='list-group d-flex flex-wrap flex-row justify-content-md-around'>
 
-export default Reviews
+				{reviews.length !== 0 ?
+					reviews.map(({ id, author, username, avatar, content, created }) => (
+						<li key={id}>
+							<ReviewCard
+								author={author}
+								username={username}
+								content={content}
+								avatar={avatar}
+								created={created}
+							/>
+						</li>
+					)) : <p className='display-6'>No reviews</p>
+
+				}
+
+			</ul>}
+
+
+		</>
+	);
+};
+
+
+
+export default Reviews;

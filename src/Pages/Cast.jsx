@@ -3,6 +3,7 @@ import { getMovieCredits } from 'Helpers/requestToApi';
 import CastCard from 'components/CastCard/CastCard';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Cast = () => {
 	const [cast, setCast] = useState([]);
@@ -24,9 +25,8 @@ const Cast = () => {
 				}));
 
 				setCast(newCast);
-			} catch (error) {
-				console.log(error);
-				setError(error);
+			} catch (err) {
+				setError(err);
 			}
 			finally {
 				setIsLoading(false)
@@ -36,9 +36,9 @@ const Cast = () => {
 		fetchCast();
 	}, [id]);
 	return (<>
-		{isLoading && <LinearProgress />}
-		<ul className='list-group d-flex flex-wrap flex-row justify-content-md-around '>
-			{cast.map(({ id, name, character, profile_path }) => (
+		{error && toast.error(error)}
+		{isLoading ? <LinearProgress /> : <ul className='list-group d-flex flex-wrap flex-row justify-content-md-around '>
+			{cast.length !== 0 ? cast.map(({ id, name, character, profile_path }) => (
 				<li key={id}>
 					<CastCard
 						name={name}
@@ -46,8 +46,9 @@ const Cast = () => {
 						avatar={profile_path}
 					/>
 				</li>
-			))}
-		</ul>
+			)) : <p className='display-6'>No cast members</p>}
+		</ul>}
+
 	</>)
 }
 

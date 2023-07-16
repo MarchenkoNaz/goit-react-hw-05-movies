@@ -1,7 +1,7 @@
 import { LinearProgress } from '@mui/material'
 import Movie from 'components/Movie/Movie'
 import SearchFilm from 'components/SearchFilm/SearchFilm'
-import React, { useState, } from 'react'
+import React, { useCallback, useState } from 'react'
 import { startTransition } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -20,13 +20,14 @@ const Movies = () => {
 	const handleSubmit = (filmArr) => {
 		startTransition(() => setCurrentFilm(filmArr))
 	}
-	const handleLoading = (flag) => {
-		return setIsLoading(flag)
-	}
+	const handleSetIsLoading = useCallback((value) => {
+		setIsLoading(value);
+	}, []);
+
 
 	return (
 		< >
-			<SearchFilm handleSubmit={handleSubmit} setSearchParams={setSearchParams} searchQuery={searchQuery} setIsLoading={handleLoading} />
+			<SearchFilm handleSubmit={handleSubmit} setSearchParams={setSearchParams} searchQuery={searchQuery} setIsLoading={handleSetIsLoading} />
 
 			{isLoading && <LinearProgress />}
 			{currentFilm ? <ul className='list-group d-flex flex-wrap flex-row justify-content-md-around '>

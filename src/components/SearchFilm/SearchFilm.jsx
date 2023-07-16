@@ -22,7 +22,7 @@ const SearchFilm = ({ handleSubmit, setSearchParams, searchQuery, setIsLoading }
 				setIsLoading(false);
 			}
 		})();
-	}, [searchQuery]);
+	}, [searchQuery, setIsLoading]);
 
 	const onChange = ({ target: { value } }) => {
 		setSearchParams({ search: value });
